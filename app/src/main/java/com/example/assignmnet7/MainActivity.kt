@@ -47,7 +47,22 @@ class MainActivity : AppCompatActivity() {
             nameInput.text.clear()
             amountInput.text.clear()
         }
+        showDetailsButton.setOnClickListener {
+            if (names.isNotEmpty() && amounts.isNotEmpty()) {
+                val intent = Intent(this, ExpenseDetailsActivity::class.java)
+                intent.putExtra("expense_name", names[0])
+                intent.putExtra("expense_amount", amounts[0])
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "No expenses to show", Toast.LENGTH_SHORT).show()
+            }
+        }
 
+        openWebButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.financialtips.com"))
+            startActivity(intent)
+        }
+    }
     override fun onStart() { super.onStart(); Log.d("MainActivity", "onStart Called") }
     override fun onResume() { super.onResume(); Log.d("MainActivity", "onResume Called") }
     override fun onPause() { super.onPause(); Log.d("MainActivity", "onPause Called") }
