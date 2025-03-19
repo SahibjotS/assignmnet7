@@ -1,5 +1,8 @@
 package com.example.assignmnet7
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -45,8 +48,16 @@ class MainActivity : AppCompatActivity() {
             amountInput.text.clear()
         }
 
+    override fun onStart() { super.onStart(); Log.d("MainActivity", "onStart Called") }
+    override fun onResume() { super.onResume(); Log.d("MainActivity", "onResume Called") }
+    override fun onPause() { super.onPause(); Log.d("MainActivity", "onPause Called") }
+    override fun onStop() { super.onStop(); Log.d("MainActivity", "onStop Called") }
+    override fun onDestroy() { super.onDestroy(); Log.d("MainActivity", "onDestroy Called") }
 
-    }
+
+
+
+}
 
     private fun removeExpense(position: Int) {
         val deleted = names[position]
