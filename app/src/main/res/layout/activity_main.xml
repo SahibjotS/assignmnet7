@@ -5,32 +5,34 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <EditText
+        android:id="@+id/expenseNameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Expense Name">
+        android:hint="Expense Name" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/expenseNameInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
+    <EditText
+        android:id="@+id/expenseAmountInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Amount">
+        android:hint="Expense Amount"
+        android:inputType="numberDecimal" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/expenseAmountInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"/>
-    </com.google.android.material.textfield.TextInputLayout>
+    <EditText
+        android:id="@+id/expenseDateInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Expense Date" />
+
+    <EditText
+        android:id="@+id/expenseCategoryInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Expense Category" />
 
     <Button
         android:id="@+id/addExpenseButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Expense" />
 
@@ -38,8 +40,5 @@
         android:id="@+id/expenseRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:contentDescription="List of expenses" />
-
-
+        android:layout_weight="1" />
 </LinearLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/expenseName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Expense Name" />
+
+    <TextView
+        android:id="@+id/expenseAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Expense Amount" />
+
+    <TextView
+        android:id="@+id/expenseDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Expense Date" />
+
+    <TextView
+        android:id="@+id/expenseCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Expense Category" />
+</LinearLayout>

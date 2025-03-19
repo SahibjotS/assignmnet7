@@ -1,31 +1,37 @@
 package com.example.assignmnet7
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+
+
 class MainActivity : AppCompatActivity() {
-    private val names = ArrayList<String>()
-    private val amounts = ArrayList<String>()
+
+    private val expenses = ArrayList<Expense>()
     private lateinit var adapter: ExpenseAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Log.d("Lifecycle", "onCreate called")
+
         val nameInput = findViewById<EditText>(R.id.expenseNameInput)
         val amountInput = findViewById<EditText>(R.id.expenseAmountInput)
+        val dateInput = findViewById<EditText>(R.id.expenseDateInput)
+        val categoryInput = findViewById<EditText>(R.id.expenseCategoryInput)
         val addButton = findViewById<Button>(R.id.addExpenseButton)
         val recyclerView = findViewById<RecyclerView>(R.id.expenseRecyclerView)
 
-        adapter = ExpenseAdapter(names, amounts) { position ->
-            removeExpense(position)
+        adapter = ExpenseAdapter(expenses) { position ->
+            showExpenseDetails(position)
         }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -33,52 +39,37 @@ class MainActivity : AppCompatActivity() {
 
         addButton.setOnClickListener {
             val name = nameInput.text.toString().trim()
-            val amount = amountInput.text.toString().trim()
+            val amountText = amountInput.text.toString().trim()
+            val date = dateInput.text.toString().trim()
+            val category = categoryInput.text.toString().trim()
 
-            if (name.isEmpty() || amount.isEmpty()) {
-                Toast.makeText(this, "Please enter both Name and Amount", Toast.LENGTH_SHORT).show()
+            if (name.isEmpty() || amountText.isEmpty() || date.isEmpty() || category.isEmpty()) {
+                Toast.makeText(this, "Please enter all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            names.add(name)
-            amounts.add(amount)
+            val amount = amountText.toDouble()
+            val expense = Expense(name, amount, date, category)
+
+            expenses.add(expense)
             adapter.notifyDataSetChanged()
 
             nameInput.text.clear()
             amountInput.text.clear()
-        }
-        showDetailsButton.setOnClickListener {
-            if (names.isNotEmpty() && amounts.isNotEmpty()) {
-                val intent = Intent(this, ExpenseDetailsActivity::class.java)
-                intent.putExtra("expense_name", names[0])
-                intent.putExtra("expense_amount", amounts[0])
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "No expenses to show", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        openWebButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.financialtips.com"))
-            startActivity(intent)
+            dateInput.text.clear()
+            categoryInput.text.clear()
         }
     }
-    override fun onStart() { super.onStart(); Log.d("MainActivity", "onStart Called") }
-    override fun onResume() { super.onResume(); Log.d("MainActivity", "onResume Called") }
-    override fun onPause() { super.onPause(); Log.d("MainActivity", "onPause Called") }
-    override fun onStop() { super.onStop(); Log.d("MainActivity", "onStop Called") }
-    override fun onDestroy() { super.onDestroy(); Log.d("MainActivity", "onDestroy Called") }
 
+    private fun showExpenseDetails(position: Int) {
+        val expense = expenses[position]
 
-
-
-}
-
-    private fun removeExpense(position: Int) {
-        val deleted = names[position]
-        Toast.makeText(this, "Deleted: $deleted", Toast.LENGTH_SHORT).show()
-        names.removeAt(position)
-        amounts.removeAt(position)
-        adapter.notifyDataSetChanged()
+        val intent = Intent(this, ExpenseDetailsActivity::class.java).apply {
+            putExtra("expense_name", expense.name)
+            putExtra("expense_amount", expense.amount)
+            putExtra("expense_date", expense.date)
+            putExtra("expense_category", expense.category)
+        }
+        startActivity(intent)
     }
 }
