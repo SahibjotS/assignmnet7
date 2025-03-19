@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
             nameInput.text.clear()
             amountInput.text.clear()
         }
+
+
     }
 
     private fun removeExpense(position: Int) {
