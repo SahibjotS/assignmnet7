@@ -1,25 +1,20 @@
-package com.example.assignmnet7;
-
+package com.example.assignmnet7
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import java.util.ArrayList;
 
-class ExpenseAdapter (
-
-    private val names: ArrayList<String>,
-    private val amounts: ArrayList<String>,
-    private val dates: ArrayList<String>,
-    private val delete: (Int) -> Unit
+class ExpenseAdapter(
+    private val expenseNames: ArrayList<String>,
+    private val expenseAmounts: ArrayList<String>,
+    private val onDeleteClick: (Int) -> Unit
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     class ExpenseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.nameTextView)
-        val amount: TextView = view.findViewById(R.id.amountTextView)
-        val date: TextView = view.findViewById(R.id.dateTextView)
+        val name: TextView = view.findViewById(R.id.expenseName)
+        val amount: TextView = view.findViewById(R.id.expenseAmount)
         val deleteButton: Button = view.findViewById(R.id.deleteButton)
     }
 
@@ -30,11 +25,12 @@ class ExpenseAdapter (
     }
 
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
-        holder.name.text = names[position]
-        holder.amount.text = "$${amounts[position]}"
-        holder.date.text = dates[position]
-        holder.deleteButton.setOnClickListener { delete(position) }
+        holder.name.text = expenseNames[position]
+        holder.amount.text = "$${expenseAmounts[position]}"
+        holder.deleteButton.setOnClickListener {
+            onDeleteClick(position)
+        }
     }
 
-    override fun getItemCount(): Int = names.size
+    override fun getItemCount(): Int = expenseNames.size
 }
