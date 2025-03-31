@@ -1,75 +1,97 @@
 package com.example.assignmnet7
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStreamReader
 
 
 class MainActivity : AppCompatActivity() {
-
-    private val expenses = ArrayList<Expense>()
-    private lateinit var adapter: ExpenseAdapter
+    private lateinit var navController: NavController
+    private val expenseList = mutableListOf<Expense>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Log.d("Lifecycle", "onCreate called")
+        Log.d("ActivityLifecycle", "onCreate called")
 
-        val nameInput = findViewById<EditText>(R.id.expenseNameInput)
-        val amountInput = findViewById<EditText>(R.id.expenseAmountInput)
-        val dateInput = findViewById<EditText>(R.id.expenseDateInput)
-        val categoryInput = findViewById<EditText>(R.id.expenseCategoryInput)
-        val addButton = findViewById<Button>(R.id.addExpenseButton)
-        val recyclerView = findViewById<RecyclerView>(R.id.expenseRecyclerView)
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
-        adapter = ExpenseAdapter(expenses) { position ->
-            showExpenseDetails(position)
+        setupActionBarWithNavController(navController)
+        loadExpensesFromFile()
+    }
+
+    private fun saveExpensesToFile() {
+        val jsonArray = JSONArray()
+        for (expense in expenseList) {
+            val obj = JSONObject()
+            obj.put("name", expense.name)
+            obj.put("amount", expense.amount)
+            obj.put("date", expense.date)
+            jsonArray.put(obj)
         }
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-
-        addButton.setOnClickListener {
-            val name = nameInput.text.toString().trim()
-            val amountText = amountInput.text.toString().trim()
-            val date = dateInput.text.toString().trim()
-            val category = categoryInput.text.toString().trim()
-
-            if (name.isEmpty() || amountText.isEmpty() || date.isEmpty() || category.isEmpty()) {
-                Toast.makeText(this, "Please enter all fields", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+        val jsonString = jsonArray.toString()
+        try {
+            openFileOutput("expenses.json", Context.MODE_PRIVATE).use {
+                it.write(jsonString.toByteArray())
             }
-
-            val amount = amountText.toDouble()
-            val expense = Expense(name, amount, date, category)
-
-            expenses.add(expense)
-            adapter.notifyDataSetChanged()
-
-            nameInput.text.clear()
-            amountInput.text.clear()
-            dateInput.text.clear()
-            categoryInput.text.clear()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    private fun showExpenseDetails(position: Int) {
-        val expense = expenses[position]
+    private fun loadExpensesFromFile() {
+        try {
+            val file = File(filesDir, "expenses.json")
+            if (!file.exists()) return
 
-        val intent = Intent(this, ExpenseDetailsActivity::class.java).apply {
-            putExtra("expense_name", expense.name)
-            putExtra("expense_amount", expense.amount)
-            putExtra("expense_date", expense.date)
-            putExtra("expense_category", expense.category)
+            val inputStream = FileInputStream(file)
+            val reader = InputStreamReader(inputStream)
+            val content = reader.readText()
+            reader.close()
+
+            val jsonArray = JSONArray(content)
+            for (i in 0 until jsonArray.length()) {
+                val obj = jsonArray.getJSONObject(i)
+                val name = obj.getString("name")
+                val amount = obj.getDouble("amount")
+                val date = obj.getString("date")
+                expenseList.add(Expense(name, amount, date))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        startActivity(intent)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("ActivityLifecycle", "onStart called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("ActivityLifecycle", "onResume called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("ActivityLifecycle", "onPause called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("ActivityLifecycle", "onStop called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("ActivityLifecycle", "onDestroy called")
     }
 }
